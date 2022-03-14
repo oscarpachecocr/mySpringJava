@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ClientesController {
 
     @Autowired
-    private ClienteService servicioCliente;
+    private IClienteService servicioCliente;
     
     @GetMapping("/")
     public String inicio(){
