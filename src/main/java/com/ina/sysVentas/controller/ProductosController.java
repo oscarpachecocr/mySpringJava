@@ -25,5 +25,54 @@ public class ProductosController {
         return "listaProductos";
     }
     
+    @PostMapping("/guardarProducto")
+    public String guardar(@Valid Producto producto, Errors errors){
+        if(errors.hasErrors())
+            return "producto";
+        
+        productoService.guardar(producto);
+        return "redirect:/productos";
+    }
+    
+    @GetMapping("/eliminarProducto/{idProducto}")
+    public String eliminar(Producto producto, RedirectAttributes redirAtt){
+        productoService.eliminar(producto);
+        String msg="Se ha eliminado al producto";
+        redirAtt.addFlashAttribute("msg", msg);
+        return "redirect:/productos";
+    }
+    
+    @GetMapping("/nuevoProducto")
+    public String nuevo(Producto producto){
+        return "producto";
+    }
+    
+    @GetMapping("/editarProducto/{idProducto}")
+    public String editar(Producto producto, Model model, RedirectAttributes redirAtt){
+        producto = productoService.obtenUno(producto.getIdProducto());
+        if(producto != null){
+            model.addAttribute("producto", producto);
+            return "producto"; 
+        }else{
+            String msg="Imposible cargar el Producto";
+            redirAtt.addFlashAttribute("msg", msg);
+            return "redirect:/productos";
+        }
+        
+    }
+    
+    @PostMapping("/buscarProducto")
+    public String buscar(String descripcion, Model model){
+        
+        if(!descripcion.isEmpty()){
+            String msg="Lista Filtrada ['"+ descripcion +"']";
+            model.addAttribute("msg", msg);
+        }
+        
+        List<Producto> lista = productoService.listar(descripcion);
+        model.addAttribute("productos",lista);
+        return "listaProductos";
+    }
+    
     
 }
