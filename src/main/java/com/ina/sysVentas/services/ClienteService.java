@@ -20,8 +20,8 @@ public class ClienteService implements IClienteService {
     }
 
     @Override
-    public void eliminar(Cliente cliente) {
-        clienteDao.delete(cliente);
+    public Integer eliminar(Cliente cliente) {
+        return clienteDao.eliminar_Cliente(cliente.getIdCliente());
     }
 
     @Override

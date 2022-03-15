@@ -3,6 +3,9 @@ package com.ina.sysVentas.dao;
 import com.ina.sysVentas.domain.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface IClienteDao extends JpaRepository<Cliente,Long>{
     
@@ -11,4 +14,8 @@ public interface IClienteDao extends JpaRepository<Cliente,Long>{
     
     @Query(value = "Select c From Cliente c Where limite_credito >=?1")
     public Iterable<Cliente> buscarPorLimites(double limite);
+    
+    @Transactional
+    @Procedure(name="ELIMINAR_CLIENTE",outputParameterName = "res")
+    Integer eliminar_Cliente(@Param("ID") long id);
 }
