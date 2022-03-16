@@ -36,8 +36,14 @@ public class ProductosController {
     
     @GetMapping("/eliminarProducto/{idProducto}")
     public String eliminar(Producto producto, RedirectAttributes redirAtt){
-        productoService.eliminar(producto);
-        String msg="Se ha eliminado al producto";
+        int resultado = productoService.eliminar(producto);
+        String msg="";
+        if(resultado == 0){
+            msg="No se puede eliminar porque tiene facturas asocaidas";
+        }else{
+            msg="Producto Eliminado!";
+        }
+        
         redirAtt.addFlashAttribute("msg", msg);
         return "redirect:/productos";
     }

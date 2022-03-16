@@ -1,6 +1,7 @@
 package com.ina.sysVentas.domain;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import lombok.Data;
@@ -25,6 +26,9 @@ public class Producto implements Serializable{
     
     @NotNull(message="La Existencia es Requerida")
     private int existencia;
+    
+    @OneToMany(mappedBy = "producto")
+    private List<DetalleVenta> detalles;
     
     public String toString(){
         return String.format("Producto: %s - %s",idProducto, descripcion);
