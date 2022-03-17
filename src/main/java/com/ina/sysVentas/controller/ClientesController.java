@@ -4,7 +4,6 @@ package com.ina.sysVentas.controller;
 import com.ina.sysVentas.domain.Cliente;
 import com.ina.sysVentas.services.IClienteService;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

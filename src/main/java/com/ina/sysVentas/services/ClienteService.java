@@ -21,7 +21,7 @@ public class ClienteService implements IClienteService {
 
     @Override
     public Integer eliminar(Cliente cliente) {
-        return clienteDao.eliminar_Cliente(cliente.getIdCliente());
+        return clienteDao.eliminarCliente(cliente.getIdCliente());
     }
 
     @Override

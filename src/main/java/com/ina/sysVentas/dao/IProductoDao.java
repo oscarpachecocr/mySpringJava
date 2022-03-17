@@ -11,6 +11,6 @@ public interface IProductoDao extends JpaRepository<Producto, Long>{
     public Iterable<Producto> findByDescripcionContains(String descripcion);
     
     @Transactional
-    @Procedure(name="ELIMINAR_PRODUCTO",outputParameterName = "res")
-    Integer eliminar_Cliente(@Param("ID") long id);
+    @Procedure(procedureName = "ELIMINAR_PRODUCTO",outputParameterName = "res")
+    public Integer eliminar_Producto(@Param("ID") long id);
 }

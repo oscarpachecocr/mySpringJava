@@ -8,8 +8,8 @@ import lombok.Data;
 
 @Data
 @Entity
+@Table(name="Detalle_venta")
 public class DetalleVenta implements Serializable{
-    
     private static final long serialVersionUID=1L;
     
     @Id
@@ -32,6 +32,4 @@ public class DetalleVenta implements Serializable{
     @JoinColumn(name="id_venta", nullable = false)
     @ManyToOne(optional = false)
     private Venta venta; 
-    
-    
 }

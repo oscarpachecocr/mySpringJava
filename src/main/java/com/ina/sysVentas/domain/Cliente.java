@@ -39,4 +39,9 @@ public class Cliente implements Serializable{
     
     @OneToMany(mappedBy = "cliente")
     private List<Venta> ventas;
+    
+    @Override
+    public String toString(){
+        return "Cliente: " + idCliente + " " + nombre + " " + apellido;
+    }
 }

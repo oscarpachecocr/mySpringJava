@@ -16,6 +16,6 @@ public interface IClienteDao extends JpaRepository<Cliente,Long>{
     public Iterable<Cliente> buscarPorLimites(double limite);
     
     @Transactional
-    @Procedure(name="ELIMINAR_CLIENTE",outputParameterName = "res")
-    Integer eliminar_Cliente(@Param("ID") long id);
+    @Procedure(procedureName="ELIMINAR_CLIENTE",outputParameterName = "res")
+    public Integer eliminarCliente(@Param("ID") long id);
 }

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class VentasService implements IVentasService{
@@ -27,21 +28,25 @@ public class VentasService implements IVentasService{
     private IProductoDao productoDao;
     
     @Override
+    @Transactional(readOnly = true)
     public List<Venta> listarVentas() {
         return ventaDao.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Venta> listarVentas(boolean cancelada) {
         return (List<Venta>) ventaDao.findByCancelada(cancelada);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Venta> listarVentas(Calendar fecha) {
         return (List<Venta>) ventaDao.findByFecha(fecha);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DetalleVenta> listarDetalles(long idVenta) {
         Venta tempVenta = new Venta();
         tempVenta.setIdVenta(idVenta);
@@ -49,16 +54,19 @@ public class VentasService implements IVentasService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Venta bucarVenta(long id) {
         return ventaDao.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DetalleVenta bucarDetalle(long id) {
         return detalleDao.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional
     public Factura guardar(Factura factura) {
         Producto prod = productoDao.findById(factura.getIdProducto()).orElse(null);
         if(prod != null){
@@ -79,6 +87,7 @@ public class VentasService implements IVentasService{
     }
 
     @Override
+    @Transactional
     public void eliminar(Venta venta) {
         venta = ventaDao.findById(venta.getIdVenta()).orElse(null);
         if(venta!=null){
@@ -89,6 +98,7 @@ public class VentasService implements IVentasService{
     }
 
     @Override
+    @Transactional
     public Factura eliminarDetale(DetalleVenta detalle) {
         detalle = detalleDao.findById(detalle.getIdDetalle()).orElse(null);
         Factura factura = new Factura();
@@ -113,8 +123,9 @@ public class VentasService implements IVentasService{
     }
 
     @Override
+    @Transactional
     public int pagarVenta(long idVenta) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ventaDao.cancelar_Factura(idVenta);
     }
     
 }

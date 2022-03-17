@@ -22,7 +22,7 @@ public class ProductoService implements IProductoService{
     @Override
     @Transactional
     public Integer eliminar(Producto producto) {
-        return productoDao.eliminar_Cliente(producto.getIdProducto());
+        return productoDao.eliminar_Producto(producto.getIdProducto());
     }
 
     @Override
