@@ -125,7 +125,7 @@ public class VentasService implements IVentasService{
     @Override
     @Transactional
     public int pagarVenta(long idVenta) {
-        return ventaDao.cancelar_Factura(idVenta);
+        return ventaDao.cancelarFactura(idVenta);
     }
     
 }

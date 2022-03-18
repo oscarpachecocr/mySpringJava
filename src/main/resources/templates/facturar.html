@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+    <head th:replace="plantillas/plantilla1 ::head">
+        <title>TODO supply a title</title>
+    </head>
+    <body>
+        <div class="container mt-3 py-3 bg-light rounded-3">
+            <header th:replace="plantillas/plantilla1 ::header"></header>
+
+            <div th:if="${msg!=null and !msg.empty}">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Mensaje: </strong> <span th:text="${msg}">texto</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div> 
+            </div>
+
+            <section>
+                <div class="container">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-around">
+                            <h3>Facturación</h3>
+                            <h4 th:text="${#dates.format(factura.fecha,'dd/MM/yyyy')}"></h4>
+                        </div>
+
+                        <div class="card-body">
+                            <form th:action="@{/guardarFactura}" method="post" th:object="${factura}">
+                                <input type="hidden" name="idVenta" th:field="*{idVenta}"/>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label for="tipo" class="form-label">Tipo de Venta</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <label for="nombreCliente" class="form-label">Cliente</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-4">
+                                        <select name="tipo" th:field="*{tipo}">
+                                            <option th:value="Crédito">Crédito</option>
+                                            <option th:value="Contado" th:selected="true"
+                                                    >Contado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="hidden" name="idCliente" 
+                                               th:field="*{idCliente}"/>
+                                        <input type="text" name="nombreCliente" 
+                                               th:field="*{nombreCliente}"
+                                               readonly="true" class="form-control" required="true"/>
+                                    </div>
+                                </div>
+                                
+                                        
+                                        
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input id="IdProducto" type="hidden" name="idProducto" th:field="*{idProducto}"/>
+                                            <input id="NombreProducto" type="text" name="descripcion" 
+                                                   th:field="*{descripcion}" class="form-control" required="true"/>
+                                            <a id="btnBuscarP" class="btn btn-success" data-toggle="modal"
+                                               data-target="#modalProductos"><i class="fas fa-binoculars"></i></a>
+
+                                            <label for="cantidad" class="form-label">Cantidad</label>
+                                            <input type="number" name="cantidad" id="cantidad" class="form-control"
+                                                   th:field="*{cantidad}" value="1" required="true">
+                                        </div>
+                                    </div>   
+                                </div>
+
+                                <div class="row">
+                                    <input type="submit" name="btnGuardar" value="Facturar Producto" 
+                                           class="btn btn-primary">
+                                </div>
+
+                                <div class="row">
+                                    <span class="font-italic text-danger"
+                                          th:if="${#fields.hasErrors('nombreCliente')}"
+                                          th:errors="*{nombreCliente}"
+                                          >Error</span>
+
+                                    <span class="font-italic text-danger"
+                                          th:if="${#fields.hasErrors('descripcion')}"
+                                          th:errors="*{descripcion}"
+                                          >Error</span>
+
+                                    <span class="font-italic text-danger"
+                                          th:if="${#fields.hasErrors('cantidad')}"
+                                          th:errors="*{cantidad}"
+                                          >Error</span>
+
+                                </div>
+                            </form> <!--FIN FORMULARIO-->
+                            <h4>Detalles de Factura</h4>
+                            <div class="row">
+                                <div th:if="${factura.detalles != null and !factura.detalles.empty}">
+                                    <table clase="table table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Descripción</th>
+                                                <th>Cantidad</th>
+                                                <th>Precio</th>
+                                                <th>Sub Total</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="item:${factura.detalles}">
+                                                <td th:text="${item.producto.idProducto}"></td>
+                                                <td th:text="${item.producto.descripcion}"></td>
+                                                <td th:text="${item.cantidad}"></td>
+                                                <td th:text="${item.precio}"></td>
+                                                <td th:text="${item.cantidad * item.precio}"></td>
+                                                <td>
+                                                    <a th:href="@{/eliminarDetalle(idDetalle=${item.idDetalle})}"><i class="fas fa-backspace"></i> Eliminar</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div th:if="${total != null and !total.empty}">
+                                        <h4>Total: 
+                                            <span th:text="${new java.text.DecimalFormat('#,##0.00').format(total)}"></span> 
+                                        </h4>
+                                        <a th:href="@{/pagar/} + ${factura.idVenta}"
+                                           class="btn btn-primary">Pagar</a>
+                                    </div>
+                                </div>
+
+                                <div th:if="${factura.detalles == null or factura.detalles.empty}">
+                                    <p class="alert alert-primary" role="alert">No hay detalles en esta factura</p>
+                                </div>
+                            </div> <!--FIN DETALLE-->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="modal fade" id="modalProductos" tabindex="-1" role="dialog"
+                     aria-labelledby="productoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="productoModalLabel" >Listado de Productos</h5>
+                                <button class="close" type="button" data-dismiss="modal" 
+                                        aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div th:if="${productos != null and !productos.empty}">
+                                    <table class="table" id="TablaProductos">
+                                        <thead>
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Descripción</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="item:${productos}">
+                                                <td th:text="${item.idProducto}"></td>
+                                                <td th:text="${item.descripcion}"></td>
+                                                <td>
+                                                    <a href="#" th:onclick="selccionar([[${item.idProducto}]],[[${item.descripcion}]])">Seleccionar</a>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div th:if="${productos == null or productos.empty}">
+                                    No hay productos en la base de datos
+                                </div>
+
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <button id="btnCerrar" type="button" class="btn btn-primary"
+                                        data-dismiss="modal">Cerrar</button>
+                            </div>                            
+                        </div>
+
+                    </div>
+
+
+                </div> <!--FIN MODAL-->
+            </section>
+        </div>
+        <script type="text/javascript">
+            function seleccionar(id, nombre){
+                $("#IdProducto").val(id);
+                $("#NombreProducto").val(nombre);
+                $("#btnCerrar").click();
+            }
+            
+            $(document).ready(function(){
+                $("#TablaProductos").DataTable({
+                    "ordering":false,
+                    "lengthMenu":[5,10,15],
+                    "language":{"url":"https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"}
+                })
+            })
+            
+        </script>
+    </body>
+</html>

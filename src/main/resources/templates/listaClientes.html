@@ -28,7 +28,7 @@
                         <form th:action="@{/filtrarClientes}" method="post">
                             <div class="input-group shadow p-2 mb-2 bg-body rounded">
                                 <input type="text" name="txtTexto" placeholder="Nombre o Apellido" class="form-control"/>
-                                <input type="submit" name="btnBuscar" value="Buscar" class="btn btn-primary">
+                                <input type="submit" name="btnBuscar" value="Buscar" class="btn btn-primary"/>
                             </div>
                         </form>
                     </div>
@@ -58,6 +58,7 @@
                                 <td th:text ="${cli.telefono}"></td>
                                 <td th:text ="${#numbers.formatCurrency(cli.limiteCredito)}"></td>
                                 <td>
+                                    <a th:href="@{/facturar/}+${cli.idCliente}"><i class="fas fa-cart-plus"></i> Facturar</a> | 
                                     <a th:href="@{/editarCliente/}+${cli.idCliente}"><i class="fas fa-pen"></i> Editar</a> | 
                                     <a th:href="@{/eliminarCliente(idCliente=${cli.idCliente})}"><i class="fas fa-trash-alt"></i> Eliminar</a>
                                 </td>
