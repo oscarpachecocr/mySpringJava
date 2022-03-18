@@ -19,8 +19,8 @@ import org.springframework.format.annotation.DateTimeFormat;
            @StoredProcedureParameter(mode = ParameterMode.IN, name="ID_PRODUCTO",type = Long.class),
            @StoredProcedureParameter(mode = ParameterMode.IN, name="CANTIDAD",type = Integer.class),
            @StoredProcedureParameter(mode = ParameterMode.IN, name="PRECIO_VENTA",type = Double.class),
-           @StoredProcedureParameter(mode = ParameterMode.OUT, name="ID_VENTA",type = Long.class),
-           @StoredProcedureParameter(mode = ParameterMode.OUT, name="retorno",type = Integer.class)
+           @StoredProcedureParameter(mode = ParameterMode.INOUT, name="ID_VENTA",type = Long.class),
+           @StoredProcedureParameter(mode = ParameterMode.INOUT, name="retorno",type = Integer.class)
        }
     )
 })

@@ -17,7 +17,7 @@
             </div>
 
             <section>
-                <div class="container">
+                <div class="container mt-3">
                     <div class="card">
                         <div class="card-header d-flex justify-content-around">
                             <h3>Facturación</h3>
@@ -35,10 +35,10 @@
                                         <label for="nombreCliente" class="form-label">Cliente</label>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-4">
-                                        <select name="tipo" th:field="*{tipo}">
+                                        <select name="tipo" th:field="*{tipo}" class="form-control">
                                             <option th:value="Crédito">Crédito</option>
                                             <option th:value="Contado" th:selected="true"
                                                     >Contado</option>
@@ -52,28 +52,28 @@
                                                readonly="true" class="form-control" required="true"/>
                                     </div>
                                 </div>
-                                
-                                        
-                                        
+
                                 <div class="row mt-3">
                                     <div class="col">
                                         <div class="input-group">
                                             <input id="IdProducto" type="hidden" name="idProducto" th:field="*{idProducto}"/>
                                             <input id="NombreProducto" type="text" name="descripcion" 
-                                                   th:field="*{descripcion}" class="form-control" required="true"/>
-                                            <a id="btnBuscarP" class="btn btn-success" data-toggle="modal"
-                                               data-target="#modalProductos"><i class="fas fa-binoculars"></i></a>
+                                                   th:field="*{descripcion}" class="form-control"  required="true"/>
+                                            <a id="btnBuscarP" class="btn btn-success" data-bs-toggle="modal"
+                                               data-bs-target="#modalProductos"><i class="fas fa-binoculars"></i>Producto</a>
 
-                                            <label for="cantidad" class="form-label">Cantidad</label>
+                                            <label for="cantidad" class="form-label mx-3">Cantidad</label>
                                             <input type="number" name="cantidad" id="cantidad" class="form-control"
-                                                   th:field="*{cantidad}" value="1" required="true">
+                                                   th:field="*{cantidad}" value="1"  required="true">
                                         </div>
                                     </div>   
                                 </div>
 
-                                <div class="row">
-                                    <input type="submit" name="btnGuardar" value="Facturar Producto" 
-                                           class="btn btn-primary">
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <input type="submit" name="btnGuardar" value="Facturar Producto" 
+                                               class="btn btn-primary">
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -91,7 +91,6 @@
                                           th:if="${#fields.hasErrors('cantidad')}"
                                           th:errors="*{cantidad}"
                                           >Error</span>
-
                                 </div>
                             </form> <!--FIN FORMULARIO-->
                             <h4>Detalles de Factura</h4>
@@ -122,7 +121,7 @@
                                         </tbody>
                                     </table>
 
-                                    <div th:if="${total != null and !total.empty}">
+                                    <div th:if="${total != null}">
                                         <h4>Total: 
                                             <span th:text="${new java.text.DecimalFormat('#,##0.00').format(total)}"></span> 
                                         </h4>
@@ -145,11 +144,9 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="productoModalLabel" >Listado de Productos</h5>
-                                <button class="close" type="button" data-dismiss="modal" 
-                                        aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                <h5 class="modal-title" id="productoModalLabel" >Listado de Productos</h5>                                
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                
                             </div>
                             <div class="modal-body">
                                 <div th:if="${productos != null and !productos.empty}">
@@ -166,7 +163,7 @@
                                                 <td th:text="${item.idProducto}"></td>
                                                 <td th:text="${item.descripcion}"></td>
                                                 <td>
-                                                    <a href="#" th:onclick="selccionar([[${item.idProducto}]],[[${item.descripcion}]])">Seleccionar</a>
+                                                    <a href="#" th:onclick="seleccionar([[${item.idProducto}]],[[${item.descripcion}]])">Seleccionar</a>
                                                 </td>
                                             </tr>
 
@@ -178,10 +175,10 @@
                                 </div>
 
                             </div>
-                            
+
                             <div class="modal-footer">
                                 <button id="btnCerrar" type="button" class="btn btn-primary"
-                                        data-dismiss="modal">Cerrar</button>
+                                        data-bs-dismiss="modal">Cerrar</button>
                             </div>                            
                         </div>
 
@@ -192,20 +189,20 @@
             </section>
         </div>
         <script type="text/javascript">
-            function seleccionar(id, nombre){
+            function seleccionar(id, nombre) {
                 $("#IdProducto").val(id);
                 $("#NombreProducto").val(nombre);
                 $("#btnCerrar").click();
             }
-            
-            $(document).ready(function(){
+
+            $(document).ready(function () {
                 $("#TablaProductos").DataTable({
-                    "ordering":false,
-                    "lengthMenu":[5,10,15],
-                    "language":{"url":"https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"}
+                    "ordering": false,
+                    "lengthMenu": [5, 10, 15],
+                    "language": {"url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"}
                 })
             })
-            
+
         </script>
     </body>
 </html>

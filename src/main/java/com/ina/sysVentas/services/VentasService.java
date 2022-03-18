@@ -81,7 +81,7 @@ public class VentasService implements IVentasService{
                 factura.getPrecio(), 
                 factura.getIdVenta(),
                 factura.getRetorno());
-        factura.setIdVenta((long)resultado.get("idVenta"));
+        factura.setIdVenta((long)resultado.get("ID_VENTA"));
         factura.setRetorno((int)resultado.get("retorno"));
         return factura;
     }
