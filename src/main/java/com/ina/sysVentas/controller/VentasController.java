@@ -4,9 +4,11 @@ import com.ina.sysVentas.domain.Cliente;
 import com.ina.sysVentas.domain.DetalleVenta;
 import com.ina.sysVentas.domain.Factura;
 import com.ina.sysVentas.domain.Producto;
+import com.ina.sysVentas.domain.Venta;
 import com.ina.sysVentas.services.IClienteService;
 import com.ina.sysVentas.services.IVentasService;
 import com.ina.sysVentas.services.IProductoService;
+import java.time.LocalDate;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,4 +99,66 @@ public class VentasController {
         return "facturar";
     }
     
+    @GetMapping("/facturas")
+    public String listar (Model model){    
+        
+        List<Venta> lista = ventaService.listarVentas(false);
+        
+        model.addAttribute("ventas", lista);
+        return "listaVentas";
+    }
+    
+    @GetMapping("/pagar/{idVenta}")
+    public String cancelar(Venta venta){
+        venta=ventaService.bucarVenta(venta.getIdVenta());
+        ventaService.pagarVenta(venta.getIdVenta());
+        return "redirect:/facturas";
+    }
+    
+    @GetMapping("/eliminarDetalle")
+    public String eliminarDetalle(DetalleVenta detalle, Model model){
+        double total=0;
+        Factura factura=ventaService.eliminarDetale(detalle);
+        List<Producto> productos = productoService.listar();
+        total = factura.getDetalles().stream()
+                .map(item -> item.getCantidad() * item.getPrecio())
+                .reduce((subtotal, valor) -> subtotal + valor)
+                .orElse(0.0);
+        
+        model.addAttribute("total", total);
+        model.addAttribute("productos", productos);
+        model.addAttribute("factura", factura);
+        return "facturar";
+    }
+    
+    @GetMapping("/editarVenta/{idVenta}")
+    public String editar(Venta venta, Model model) {
+        double total = 0;
+        venta = ventaService.bucarVenta(venta.getIdVenta());
+
+        Factura factura = new Factura();
+        factura.setIdVenta(venta.getIdVenta());
+        factura.setFecha(venta.getFecha());
+        factura.setIdCliente(venta.getCliente().getIdCliente());
+        factura.setNombreCliente(venta.getCliente().getNombre() + " " + venta.getCliente().getApellido());
+        factura.setTipo(venta.getTipo());
+        factura.setDetalles(venta.getDetalles());
+
+        List<Producto> productos = productoService.listar();
+        total = factura.getDetalles().stream().map(item -> item.getCantidad() * item.getPrecio()).reduce((subtotal, valor) -> subtotal + valor).orElse(0.0);
+        model.addAttribute("total", total);
+        model.addAttribute("msg", null);
+        model.addAttribute("productos", productos);
+        model.addAttribute("factura", factura);
+
+        return "facturar";
+    }
+
+    @GetMapping("/eliminarVenta/{idVenta}")
+    public String eliminarVenta(Venta venta) {
+
+        ventaService.eliminar(venta);
+        
+        return "redirect:/facturas";
+    }
 }
